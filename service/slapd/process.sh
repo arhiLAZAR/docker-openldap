@@ -14,4 +14,4 @@ ulimit -n $LDAP_NOFILE
 FQDN="$(/bin/hostname --fqdn)"
 HOST_PARAM="ldap://$FQDN:$LDAP_PORT ldaps://$FQDN:$LDAPS_PORT"
 
-{ exec /usr/sbin/slapd -h "$HOST_PARAM ldapi:///" -u openldap -g openldap -d "$LDAP_LOG_LEVEL" 2>&1 ; } | tee -a "${LOG_DIR}/${LOG_FILE}"
+{ exec /usr/sbin/slapd -h "$HOST_PARAM ldapi:///" -u openldap -g openldap -d "$LDAP_LOG_LEVEL" 2>&1 ; } | ts '%Y-%m-%d %H:%M:%S %Z' | tee -a "${LOG_DIR}/${LOG_FILE}"
