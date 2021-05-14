@@ -586,6 +586,14 @@ EOF
   fi
 
   #
+  # create log directory
+  #
+  [ -d "${LOG_DIR}" ] || mkdir -p "${LOG_DIR}"
+  [ -f "${LOG_DIR}/${LOG_FILE}" ] || touch "${LOG_DIR}/${LOG_FILE}"
+  chown openldap:openldap "${LOG_DIR}" "${LOG_DIR}/${LOG_FILE}"
+  chmod 755 "${LOG_DIR}"
+
+  #
   # setup done :)
   #
   log-helper info "First start is done..."
