@@ -38,9 +38,7 @@ dn: olcDatabase={1}{{ LDAP_BACKEND }},cn=config
 changetype: modify
 add: olcSyncRepl
 {{ LDAP_REPLICATION_HOSTS_DB_SYNC_REPL }}
--
-add: olcMirrorMode
-olcMirrorMode: TRUE
+{{ MIRROR_MODE }}
 -
 add: olcLimits
 olcLimits: dn.exact="cn=admin,$LDAP_BASE_DN" time.soft=unlimited time.hard=unlimited size.soft=unlimited size.hard=unlimited

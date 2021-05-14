@@ -498,6 +498,12 @@ EOF
 
       sed -i "s|{{ LDAP_BACKEND }}|${LDAP_BACKEND}|g" ${CONTAINER_SERVICE_DIR}/slapd/assets/config/replication/replication-enable.ldif
 
+      if [ "${READ_ONLY_REPLICA,,}" == "true" ]; then
+        sed -i "/{{ MIRROR_MODE }}/d" ${CONTAINER_SERVICE_DIR}/slapd/assets/config/replication/replication-enable.ldif
+      else
+        sed -i "s|{{ MIRROR_MODE }}|-\nadd: olcMirrorMode\nolcMirrorMode: TRUE|g" ${CONTAINER_SERVICE_DIR}/slapd/assets/config/replication/replication-enable.ldif
+      fi
+
       ldapmodify -c -Y EXTERNAL -Q -H ldapi:/// -f ${CONTAINER_SERVICE_DIR}/slapd/assets/config/replication/replication-enable.ldif 2>&1 | log-helper debug || true
 
       [[ -f "$WAS_STARTED_WITH_REPLICATION" ]] && rm -f "$WAS_STARTED_WITH_REPLICATION"
