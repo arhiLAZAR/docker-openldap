@@ -456,6 +456,18 @@ EOF
     function disableReplication() {
       sed -i "s|{{ LDAP_BACKEND }}|${LDAP_BACKEND}|g" ${CONTAINER_SERVICE_DIR}/slapd/assets/config/replication/replication-disable.ldif
       ldapmodify -c -Y EXTERNAL -Q -H ldapi:/// -f ${CONTAINER_SERVICE_DIR}/slapd/assets/config/replication/replication-disable.ldif 2>&1 | log-helper debug || true
+
+      # Workaround for issue https://github.com/osixia/docker-openldap/issues/183
+      config_syncprov_ldifs="$(ls /etc/ldap/slapd.d/cn\=config/olcDatabase\=\{*\}config/olcOverlay\=\{*\}syncprov.ldif 2>/dev/null)"
+      backend_syncprov_ldifs="$(ls /etc/ldap/slapd.d/cn\=config/olcDatabase\=\{*\}${LDAP_BACKEND}/olcOverlay\=\{*\}syncprov.ldif 2>/dev/null)"
+
+      for file in ${config_syncprov_ldifs} ${backend_syncprov_ldifs}
+      do
+        if [ -f "${file}" ]; then
+          rm -f "${file}" || true
+        fi
+      done
+
       [[ -f "$WAS_STARTED_WITH_REPLICATION" ]] && rm -f "$WAS_STARTED_WITH_REPLICATION"
     }
 
