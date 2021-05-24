@@ -4,6 +4,8 @@ on:
     branches: [ master ]
 jobs:
   build:
+    env:
+      IMAGE_NAME: openldap
     runs-on: ubuntu-latest
     steps:
 
@@ -40,7 +42,7 @@ jobs:
           file: ./Dockerfile
           builder: ${{ steps.buildx.outputs.name }}
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/openldap:latest,${{ secrets.DOCKER_HUB_USERNAME }}/openldap:${{ steps.sha.outputs.short }}
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest,${{ secrets.DOCKER_HUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ steps.sha.outputs.short }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
 
