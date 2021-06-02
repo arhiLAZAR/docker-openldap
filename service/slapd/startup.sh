@@ -477,6 +477,9 @@ EOF
       disableReplication || true
 
       i=1
+      sed -i "s|{{ LDAP_REPLICATION_HOSTS }}|olcServerID: $i ldap://localhost\n{{ LDAP_REPLICATION_HOSTS }}|g" ${CONTAINER_SERVICE_DIR}/slapd/assets/config/replication/replication-enable.ldif
+      ((i++))
+
       for host in $(complex-bash-env iterate LDAP_REPLICATION_HOSTS_MASTER)
       do
         sed -i "s|{{ LDAP_REPLICATION_HOSTS }}|olcServerID: $i ${!host}\n{{ LDAP_REPLICATION_HOSTS }}|g" ${CONTAINER_SERVICE_DIR}/slapd/assets/config/replication/replication-enable.ldif
